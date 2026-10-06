@@ -1,39 +1,54 @@
 # Enterprise Endpoint & Fleet Automation Toolkit (PowerShell)
 
-Production-tested PowerShell scripts designed for automated endpoint management, silent software remediation, and staged software deployments across large-scale Windows workstation environments (300+ endpoints).
+Production-tested PowerShell scripts designed for automated endpoint management, silent software remediation, cybersecurity agent rollouts, mass volume licensing, and staged fleet deployments across 300+ Windows workstation environments.
 
-Engineered for seamless integration with enterprise RMM platforms (Action1, Atera), remote management tools (VNC), and hybrid identity environments (Active Directory / Microsoft 365).
+Engineered for unattended execution via enterprise RMM platforms (Action1, Atera), remote management tools (VNC), and hybrid identity environments (Active Directory / Microsoft 365).
 
 ---
 
 ## 📌 Repository Overview
 
-This repository provides production-grade scripts built with enterprise reliability in mind: structured logging, error handling, local staging validation, and idempotence.
+This repository contains operational automation tools developed and deployed in enterprise logistics and developer environments:
 
 ### Modules Included
 
-1. **`01-Office-ClickToRun-Remediation.ps1`**
-   * Deep diagnostic and automated repair/reinstall routines for corrupt Microsoft 365 / Office Click-to-Run deployments.
-   * Cleans stale registry entries and removes stuck installation lockfiles silently.
-2. **`02-Staged-Software-Deployment.ps1`**
-   * Robust software staging routine utilizing `Robocopy` with integrated retry limits and network fault tolerance.
-   * Validates local package hash integrity prior to executing silent installers.
-3. **`03-MultiUser-Cache-And-Compliance-Audit.ps1`**
-   * Purges orphaned user profile temporary caches on shared multi-user logistics workstations.
-   * Audits local endpoint compliance, active group policies (GPO), and security agent status.
+1. **`01-Office-ClickToRun-DeepScrub.ps1`**
+   * Complete administrative purge routine for corrupted Microsoft Office and Click-to-Run installations.
+   * Forcefully terminates stuck processes, unregisters update tasks, deletes services (`sc.exe`), and scrubs registry hives across 32-bit and 64-bit paths.
+
+2. **`02-Windows-Debloat-Edge-Copilot-Removal.ps1`**
+   * Silent de-bloat routine targeting Microsoft Edge and Windows Copilot on dedicated developer endpoints.
+   * Purges AppX packages and enforces persistent Group Policy registry flags against automatic reinstallation.
+
+3. **`03-Staged-Network-Software-Deployment.ps1`**
+   * Resilient enterprise software deployment using authenticated SMB and `Robocopy`.
+   * Evaluates Robocopy bitmask return codes (`< 8`), stages packages locally to tolerate network drops, and handles automatic cleanup.
+
+4. **`04-Office-Volume-Licensing-Activation.ps1`**
+   * Mass unattended volume licensing activation routine for Office deployments across 100+ endpoints.
+   * Dynamically locates `OSPP.VBS` across architectures, injects product keys, and audits activation status flags.
+
+5. **`05-TrendMicro-ApexOne-Fleet-Deployment.ps1`**
+   * Large-scale fleet rollout (300+ endpoints) for Trend Micro Apex One Security Agent.
+   * Features a triple-factor idempotency check (Registry, core services: `ntrtscan`/`OfficeScanAgent`, and file system paths) to eliminate duplicate deployments, paired with authenticated `New-PSDrive` staging and graceful session teardown.
+
+6. **`06-Enterprise-MultiUser-Cache-Purge.ps1`**
+   * Deep maintenance routine designed for post-deployment verification and developer workstation hygiene.
+   * Cleans Windows Temp, Prefetch, and SoftwareDistribution queues, scrubs browser engines (Chrome, Edge, Firefox, Brave) across all active user profiles, empties the Recycle Bin, and flushes the DNS client resolver cache.
 
 ---
 
 ## 🛡️ Safety & Deployment Methodology
 
-All scripts in this repository follow strict operational change-management guidelines:
-* **Pre-flight System Restore Points:** Critical changes initiate a lightweight local restore checkpoint where supported.
-* **Controlled Pilot Groups:** Staging-first validation on test hardware before broad tenant rollout.
-* **Exit Codes & Verbose Logging:** Explicit exit codes compatible with RMM execution alerts and audit trails.
+All scripts in this repository follow strict operational standards:
+* **Idempotency:** Pre-flight detection checks prevent duplicate runs, installation collisions, or unintended reconfigurations.
+* **Architecture Agnostic:** Dynamic path discovery across standard `Program Files`, `Wow6432Node`, and x86 paths.
+* **Network Fault Tolerance:** Local caching/staging prevents corrupted partial installs during transient network drops.
+* **Structured Exit Codes:** Clean return codes for accurate monitoring in RMM job summaries and ticketing systems.
 
 ---
 
 ## 👤 Author
 * **Iván Felipe Rodríguez C.** – *IT Support Specialist (L2/L3)*
-* **Focus:** Endpoint Administration, Automation & Systems Infrastructure
+* **Focus:** Endpoint Administration, Systems Infrastructure & PowerShell Automation
 * **Contact:** [irodriguezcc@outlook.com](mailto:irodriguezcc@outlook.com)
